@@ -1,21 +1,26 @@
 import { useState } from "react";
+import { AddCategory } from "./components/AddCategory";
+import { GifGrid } from "./components/GifGrid";
 
 export function GifExpertApp() {
-  const [categories, setCategories] = useState(["one", "two", "three", "four"]);
+  const [categories, setCategories] = useState(["rick and morty"]);
 
-  const handleAdd = () => {
-    setCategories([...categories, "five"]);
-  };
+  // const handleAdd = () => {
+  //   setCategories([...categories, "five"]);
+  //    setCategories(cat => [...cat, "five"]);
+  // };
 
   return (
     <>
       <h1>GifExpertApp</h1>
       <hr />
 
-      <button onClick={handleAdd}>Agregar</button>
+      <AddCategory setCategories={setCategories} />
+
+      {/* <button onClick={handleAdd}>Agregar</button> */}
       <ol>
         {categories.map((category) => (
-          <li key={category}>{category}</li>
+          <GifGrid category={category} key={category} />
         ))}
       </ol>
     </>

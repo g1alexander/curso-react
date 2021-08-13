@@ -1,70 +1,118 @@
-# Getting Started with Create React App
+# Hooks
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## useState()
 
-## Available Scripts
+- Para adiccionar como se usa el [useState()](https://reactjs.org/docs/state.html) tenemos que hay varias maneras que podemos modificar el estado. estas son:
 
-In the project directory, you can run:
+  ```jsx
+  const [categories, setCategories] = useState(["one", "two", "three", "four"]);
 
-### `npm start`
+  const handleAdd = () => {
+    setCategories([...categories, "five"]);
+    //setCategories(cat => [...cat, "five"]);
+  };
+  ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  - La diferencia entre estas dos formas de cambiar el estado es que con la primera tenemos que tener el estado disponible en la variable **categories** mientras que la segunda tenemos acceso a la referencia del estado mendiante la **function**
+  - La segunda forma es mas practica en comunicacion de componentes (en el componente padre tiene el estado y en el hijo cambias el estado y solo tienes que pasarle la funcion **setCategories** sin necesidad de pasarle el estado **categories**)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## useEffect()
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Este hook es muy importante, debido a que es un metodo que permite manejar el ciclo de vida de un componente.
 
-### `npm run build`
+- el **useEffect()** es importante para cuando hace un llamado a una peticion **HTTP**, debido a que como los componente de **React** se rendizan cada vez que se dispara una accion, sino tenemos control de esto estaremos haciendo peticiones de manera infinita
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- aca es donde entra este Hook es cual atraves de una lista de depencias le dice a **React** que solo hara la peticion cuando cargue el componente una sola vez
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- los parametros de este Hook son:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  - el primero es una **callback** la cual ejecutara nuestro codigo
+  - el segundo sera una lista de depencias (la cual es un array), si queremos que el **useEffect()** solo se ejecute una sola vez ponemos un array vacio **"[]"**
 
-### `npm run eject`
+  ```jsx
+  import { useEffect } from "react";
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  export function GifGrid({ category }) {
+    useEffect(() => {
+      getGifApi();
+    }, []);
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    const getGifApi = async () => {
+      const api = `http://api.giphy.com/v1/gifs/search?q=Rick and Morty&limit=10&api_key=NP5cQV4cSEAzBTGF0UJooDCwFcYASGyH`;
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+      const response = await fetch(api);
+      const { data } = await response.json();
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+      const gifs = data.map(({ id, images, title }) => {
+        return {
+          id,
+          image: images?.downsized_medium.url,
+          title,
+        };
+      });
 
-## Learn More
+      console.log(gifs);
+    };
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    return (
+      <>
+        <h3>{category}</h3>
+      </>
+    );
+  }
+  ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- dependencias en **useEffects()**, sirven para decirle al hook que si llega a ver un cambio en el estado vuelva a ejecutar el **useEffects()**, esto es muy importante debido a que por lo general este cambia
 
-### Code Splitting
+```jsx
+//las categories pueden cambiar, por eso lo ponemos como depencia
+useEffect(() => {
+  //llamado a una api
+  getGifApi(category).then((data) => {
+    setState({
+      data,
+      loading: false,
+    });
+  });
+}, [category]);
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Custom Hooks
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- son funciones que creamos para reutilizar la logica que empleemos en nuestros componentes, lo magico de esto es que podemos utilizarlo muchas veces en diferentes componentes
 
-### Making a Progressive Web App
+- si bien estos hooks estan separados de los componentes, eso no quita que podamos utilizar las herramientas de **React** (en ellos podemos utilizar los hooks de React :D)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Ideas para implementar un custom hook:
 
-### Advanced Configuration
+  - peticiones **HTTP**
+  - validacion de formularios
+  - separar la logica de un componente (si este se empieza a ver ilegible)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  ```jsx
+  import { useEffect, useState } from "react";
+  import { getGifApi } from "../helpers/getGifApi";
 
-### Deployment
+  export function useFetchGif(category) {
+    const [state, setState] = useState({
+      data: [],
+      loading: true,
+    });
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    useEffect(() => {
+      //llamado a una api
+      getGifApi(category).then((data) => {
+        setState({
+          data,
+          loading: false,
+        });
+      });
+    }, [category]);
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    return state;
+  }
+  ```
