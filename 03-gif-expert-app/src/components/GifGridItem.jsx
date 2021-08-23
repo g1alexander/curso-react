@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export function GifGridItem({ title, image }) {
   return (
     <div className="card animate__animated animate__bounce">
@@ -6,3 +8,8 @@ export function GifGridItem({ title, image }) {
     </div>
   );
 }
+
+GifGridItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+};

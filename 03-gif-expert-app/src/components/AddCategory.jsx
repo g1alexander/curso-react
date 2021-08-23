@@ -18,6 +18,7 @@ export function AddCategory({ setCategories }) {
 
   return (
     <form onSubmit={handleSubmit}>
+      <p>{inputValue}</p>
       <input
         value={inputValue}
         onChange={handleInputChange}
