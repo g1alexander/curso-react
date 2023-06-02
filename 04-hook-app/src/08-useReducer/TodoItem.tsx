@@ -8,10 +8,16 @@ interface Props {
 
 export default function TodoItem({ todo, onDeleteTodo, onToggleTodo }: Props) {
   return (
-    <li>
-      <span onClick={() => onToggleTodo(todo)}>{todo.desc}</span>
+    <li className="li">
+      <span
+        aria-label="span"
+        className="spann"
+        onClick={() => onToggleTodo(todo)}
+      >
+        {todo.desc}
+      </span>
 
-      {todo.done && <span> - Hecho</span>}
+      {todo.done && <span aria-label="complete"> - Hecho</span>}
       <button onClick={() => onDeleteTodo(todo)}>Eliminar</button>
     </li>
   );

@@ -4,7 +4,7 @@ import { UserContext } from ".";
 export default function LoginPage() {
   const { user, setUser } = useContext(UserContext);
 
-  console.log({ user, setUser });
+  // console.log({ user, setUser });
 
   const handleLogin = () => {
     setUser({
@@ -18,10 +18,12 @@ export default function LoginPage() {
     <>
       <div>LoginPage</div>
       <pre>
-        <code>{JSON.stringify(user)}</code>
+        <code aria-label="code">{JSON.stringify(user)}</code>
       </pre>
 
-      <button onClick={handleLogin}>Login establecer</button>
+      <button aria-label="hola" onClick={handleLogin}>
+        Login establecer
+      </button>
     </>
   );
 }

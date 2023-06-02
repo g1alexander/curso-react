@@ -1,8 +1,8 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouteObject, createBrowserRouter } from "react-router-dom";
 
 import { AboutPage, HomePage, LoginPage, MainApp } from ".";
 
-export const router = createBrowserRouter([
+export const routes: RouteObject[] = [
   {
     path: "/",
     element: <MainApp />,
@@ -29,4 +29,6 @@ export const router = createBrowserRouter([
     path: "*",
     element: <Navigate to="/login" />,
   },
-]);
+];
+
+export const router = createBrowserRouter(routes);

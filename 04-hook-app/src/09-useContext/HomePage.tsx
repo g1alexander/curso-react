@@ -8,7 +8,7 @@ export default function HomePage() {
     <>
       <div>HomePage</div>
       <pre>
-        <code>{JSON.stringify(context)}</code>
+        <code aria-label="code">{JSON.stringify(context)}</code>
       </pre>
     </>
   );
